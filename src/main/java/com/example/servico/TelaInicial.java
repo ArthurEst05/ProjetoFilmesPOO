@@ -1,15 +1,29 @@
 package com.example.servico;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import entites.Usuario;
+import modelDao.DaoFactory;
+import modelDao.UsuarioDao;
 
 public class TelaInicial {
     private JFrame frame;
     private JTextField txtUsername;
     private JPasswordField txtPassword;
     private JButton btnEntrar;
+    private JButton btnCadastrar;
 
     public TelaInicial() {
         initialize();
@@ -31,12 +45,13 @@ public class TelaInicial {
         JLabel lblPassword = new JLabel("Senha:");
         txtPassword = new JPasswordField();
         btnEntrar = new JButton("Entrar");
+        btnCadastrar = new JButton("Cadastrar");
 
         loginPanel.add(lblUsername);
         loginPanel.add(txtUsername);
         loginPanel.add(lblPassword);
         loginPanel.add(txtPassword);
-        loginPanel.add(new JLabel()); // Espaço vazio para alinhamento
+        loginPanel.add(btnCadastrar);
         loginPanel.add(btnEntrar);
 
         frame.getContentPane().add(loginPanel, BorderLayout.CENTER);
@@ -45,6 +60,13 @@ public class TelaInicial {
             @Override
             public void actionPerformed(ActionEvent e) {
                 entrar();
+            }
+        });
+
+        btnCadastrar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                abrirTelaCadastro();
             }
         });
     }
@@ -66,9 +88,17 @@ public class TelaInicial {
         }
     }
 
-    private boolean autenticar(String username, String password) {
-        // Aqui você pode adicionar a lógica de autenticação real, como verificar em um banco de dados.
-        // Por enquanto, vamos usar um exemplo simples:
-        return "admin".equals(username) && "password".equals(password);
+    private void abrirTelaCadastro() {
+        frame.dispose(); // Fecha a tela inicial
+        TelaCadastro telaCadastro = new TelaCadastro();
+        telaCadastro.show(); // Exibe a tela de cadastro
     }
+
+    private boolean autenticar(String username, String password) {
+    UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
+    Usuario usuario = usuarioDao.findByUsernameAndPassword(username, password);
+
+    return usuario != null;
+}
+
 }

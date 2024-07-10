@@ -152,5 +152,31 @@ public void update(Usuario obj) {
             DB.closeResultSet(rs);
         }
     }
+    
+    public Usuario findByUsernameAndPassword(String username, String password) {
+        PreparedStatement st = null;
+        ResultSet rs = null;
+        try {
+            st = conn.prepareStatement("SELECT * FROM usuario WHERE Nome = ? AND Senha = ?");
+            st.setString(1, username);
+            st.setString(2, password);
+    
+            rs = st.executeQuery();
+            if (rs.next()) {
+                Usuario obj = new Usuario();
+                obj.setId(rs.getInt("Id"));
+                obj.setNome(rs.getString("Nome"));
+                obj.setEmail(rs.getString("Email"));
+                obj.setSenha(rs.getString("Senha"));
+                return obj;
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new DbException(e.getMessage());
+        } finally {
+            DB.closeResultSet(rs);
+            DB.closeStatement(st);
+        }
+    }
 
 }
