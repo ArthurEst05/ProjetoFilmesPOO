@@ -1,11 +1,16 @@
 package com.example.servico;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,6 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import entites.Usuario;
 import modelDao.DaoFactory;
@@ -24,35 +31,88 @@ public class TelaInicial {
     private JPasswordField txtPassword;
     private JButton btnEntrar;
     private JButton btnCadastrar;
+    private Image backgroundImage;
 
     public TelaInicial() {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                 | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+        backgroundImage = new ImageIcon("C:\\Users\\2023101202010019\\IdeaProjects\\ProjetoFilmesPOO\\image\\telainicial.png").getImage();
         initialize();
     }
 
     private void initialize() {
-        frame = new JFrame("Tela Inicial");
+        frame = new JFrame("Flick Review");
         frame.setBounds(100, 100, 400, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout());
 
         // Painel para os campos de login
-        JPanel loginPanel = new JPanel();
-        loginPanel.setLayout(new GridLayout(3, 2, 10, 10));
-        loginPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        JPanel loginPanel = new BackgroundPanel();
+        loginPanel.setLayout(new GridBagLayout());
+        loginPanel.setBorder(BorderFactory.createEmptyBorder(20, 60, 20, 60));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new java.awt.Insets(5, 5, 5, 5);
 
         JLabel lblUsername = new JLabel("Nome de usuário:");
-        txtUsername = new JTextField();
-        JLabel lblPassword = new JLabel("Senha:");
-        txtPassword = new JPasswordField();
-        btnEntrar = new JButton("Entrar");
-        btnCadastrar = new JButton("Cadastrar");
+        lblUsername.setFont(new Font("Melted Monster", Font.PLAIN, 16));
+        lblUsername.setForeground(Color.WHITE); // Define a cor da fonte para branco
+        txtUsername = new JTextField(15); // Limita o tamanho da caixa de texto
 
-        loginPanel.add(lblUsername);
-        loginPanel.add(txtUsername);
-        loginPanel.add(lblPassword);
-        loginPanel.add(txtPassword);
-        loginPanel.add(btnCadastrar);
-        loginPanel.add(btnEntrar);
+        JLabel lblPassword = new JLabel("Senha:");
+        lblPassword.setFont(new Font("Melted Monster", Font.PLAIN, 16));
+        lblPassword.setForeground(Color.WHITE); // Define a cor da fonte para branco
+        txtPassword = new JPasswordField(15); // Limita o tamanho da caixa de texto
+
+        btnCadastrar = new JButton("Cadastrar");
+        btnEntrar = new JButton("Entrar");
+
+        btnCadastrar.setIcon(new ImageIcon("path/to/register_icon.png"));
+        btnEntrar.setIcon(new ImageIcon("path/to/login_icon.png"));
+
+        btnCadastrar.setBackground(new Color(0, 0, 0));
+        btnCadastrar.setForeground(Color.WHITE);
+        btnCadastrar.setFont(new Font("Arial", Font.BOLD, 12));
+        btnCadastrar.setFocusPainted(false);
+        btnCadastrar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        btnEntrar.setBackground(new Color(255, 63, 63));
+        btnEntrar.setForeground(Color.WHITE);
+        btnEntrar.setFont(new Font("Arial", Font.BOLD, 12));
+        btnEntrar.setFocusPainted(false);
+        btnEntrar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        loginPanel.add(lblUsername, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        loginPanel.add(txtUsername, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        loginPanel.add(lblPassword, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        loginPanel.add(txtPassword, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        loginPanel.add(btnEntrar, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        loginPanel.add(btnCadastrar, gbc);
 
         frame.getContentPane().add(loginPanel, BorderLayout.CENTER);
 
@@ -95,10 +155,17 @@ public class TelaInicial {
     }
 
     private boolean autenticar(String username, String password) {
-    UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
-    Usuario usuario = usuarioDao.findByUsernameAndPassword(username, password);
+        UsuarioDao usuarioDao = DaoFactory.createUsuarioDao();
+        Usuario usuario = usuarioDao.findByUsernameAndPassword(username, password);
 
-    return usuario != null;
-}
+        return usuario != null;
+    }
 
+    private class BackgroundPanel extends JPanel {
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
 }
