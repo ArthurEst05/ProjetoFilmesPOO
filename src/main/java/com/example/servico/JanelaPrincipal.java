@@ -21,27 +21,50 @@ public class JanelaPrincipal {
     private JLabel posterLabel;
     private JList<String> movieList;
     private DefaultListModel<String> listModel;
-    private Filmes filmeService; // Importante: Certifique-se de que o nome da classe é `Filmes` e não `FilmeService`
+    private Filmes filmeService;
 
     public JanelaPrincipal() {
-        filmeService = new Filmes(); // Inicializa o serviço de filmes
+        filmeService = new Filmes();
         initialize();
     }
 
     private void initialize() {
+        // Configurações do tema dark
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+            UIManager.put("control", new Color(128, 128, 128));
+            UIManager.put("info", new Color(128, 128, 128));
+            UIManager.put("nimbusBase", new Color(18, 30, 49));
+            UIManager.put("nimbusAlertYellow", new Color(248, 187, 0));
+            UIManager.put("nimbusDisabledText", new Color(128, 128, 128));
+            UIManager.put("nimbusFocus", new Color(115, 164, 209));
+            UIManager.put("nimbusGreen", new Color(176, 179, 50));
+            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221));
+            UIManager.put("nimbusLightBackground", new Color(18, 30, 49));
+            UIManager.put("nimbusOrange", new Color(191, 98, 4));
+            UIManager.put("nimbusRed", new Color(169, 46, 34));
+            UIManager.put("nimbusSelectedText", new Color(255, 255, 255));
+            UIManager.put("nimbusSelectionBackground", new Color(104, 93, 156));
+            UIManager.put("text", new Color(230, 230, 230));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         frame = new JFrame("Informações do Filme");
-        frame.setBounds(100, 100, 600, 400);
+        frame.setBounds(100, 100, 800, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximiza a janela ao iniciar
         frame.getContentPane().setLayout(new BorderLayout());
-        posterLabel = new JLabel();
-        frame.getContentPane().add(posterLabel, BorderLayout.WEST);
 
         // Painel para entrada de texto e botão de busca
         JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel lblNomeFilme = new JLabel("Nome do Filme:");
-        textField = new JTextField(20);
-        inputPanel.add(lblNomeFilme);
-        inputPanel.add(textField);
+        lblNomeFilme.setFont(new Font("Arial", Font.BOLD, 14));
+        lblNomeFilme.setForeground(Color.WHITE); // Define a cor do texto para branco
+        textField = new JTextField(30);
+        textField.setBackground(new Color(30, 30, 30)); // Cor de fundo escura
+        textField.setForeground(Color.WHITE); // Cor do texto para branco
 
         JButton btnBuscar = new JButton("Buscar");
         btnBuscar.addActionListener(new ActionListener() {
@@ -50,17 +73,28 @@ public class JanelaPrincipal {
                 buscarFilmes();
             }
         });
+        btnBuscar.setBackground(new Color(50, 50, 50)); // Cor de fundo escura
+        btnBuscar.setForeground(Color.WHITE); // Cor do texto para branco
+
+        inputPanel.setBackground(new Color(30, 30, 30)); // Cor de fundo escura
+        inputPanel.add(lblNomeFilme);
+        inputPanel.add(textField);
         inputPanel.add(btnBuscar);
 
         frame.getContentPane().add(inputPanel, BorderLayout.NORTH);
 
-        // Área de exibição de informações e lista de resultados
-        JPanel contentPanel = new JPanel(new BorderLayout());
+        // Painel principal para a lista de filmes e detalhes
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBackground(new Color(18, 30, 49)); // Cor de fundo escura
+        frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
 
-        // Lista de resultados
+        // Lista de resultados de filmes
         listModel = new DefaultListModel<>();
         movieList = new JList<>(listModel);
         movieList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        movieList.setForeground(Color.WHITE); // Cor do texto para branco
+        movieList.setBackground(new Color(30, 30, 30)); // Cor de fundo escura
+        movieList.setSelectionBackground(new Color(104, 93, 156)); // Cor de fundo da seleção
         movieList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -72,21 +106,36 @@ public class JanelaPrincipal {
                 }
             }
         });
-        JScrollPane listScrollPane = new JScrollPane(movieList);
-        contentPanel.add(listScrollPane, BorderLayout.WEST);
 
-        // Área de exibição de informações
-        textArea = new JTextArea(15, 40);
+        JScrollPane listScrollPane = new JScrollPane(movieList);
+        listScrollPane.setPreferredSize(new Dimension(200, 0));
+        listScrollPane.setBackground(new Color(30, 30, 30)); // Cor de fundo escura
+        mainPanel.add(listScrollPane, BorderLayout.WEST);
+
+        // Painel de detalhes do filme
+        JPanel detailsPanel = new JPanel(new BorderLayout());
+        detailsPanel.setBackground(new Color(18, 30, 49)); // Cor de fundo escura
+        mainPanel.add(detailsPanel, BorderLayout.CENTER);
+
+        // Painel para o poster do filme
+        posterLabel = new JLabel();
+        posterLabel.setHorizontalAlignment(JLabel.CENTER);
+        posterLabel.setVerticalAlignment(JLabel.TOP);
+        posterLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        posterLabel.setBackground(new Color(18, 30, 49)); // Cor de fundo escura
+        detailsPanel.add(posterLabel, BorderLayout.WEST);
+
+        // Área de texto para exibir informações do filme
+        textArea = new JTextArea();
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setEditable(false);
+        textArea.setBackground(new Color(18, 30, 49)); // Cor de fundo escura
+        textArea.setForeground(Color.WHITE); // Cor do texto para branco
         JScrollPane textScrollPane = new JScrollPane(textArea);
-        contentPanel.add(textScrollPane, BorderLayout.CENTER);
+        detailsPanel.add(textScrollPane, BorderLayout.CENTER);
 
-        frame.getContentPane().add(contentPanel, BorderLayout.CENTER);
-    }
-
-    public void show() {
+        // Mostrar a janela
         frame.setVisible(true);
     }
 
@@ -117,11 +166,11 @@ public class JanelaPrincipal {
                 exibirPoster(filmeSelecionado.getPoster());
             } else {
                 textArea.setText("Detalhes do filme não encontrados.");
-                posterLabel.setIcon(null); // Limpa o poster se nenhum resultado for encontrado
+                posterLabel.setIcon(null);
             }
         } catch (Exception ex) {
             textArea.setText("Ocorreu um erro ao buscar os detalhes do filme.");
-            posterLabel.setIcon(null); // Limpa o poster em caso de erro
+            posterLabel.setIcon(null);
         }
     }
 
@@ -135,15 +184,23 @@ public class JanelaPrincipal {
                 InputStream posterStream = response.body();
                 byte[] posterBytes = posterStream.readAllBytes();
                 ImageIcon icon = new ImageIcon(posterBytes);
-                Image scaledImage = icon.getImage().getScaledInstance(150, 225, Image.SCALE_SMOOTH);
+                Image scaledImage = icon.getImage().getScaledInstance(300, 450, Image.SCALE_SMOOTH); // Tamanho ajustado da imagem
                 posterLabel.setIcon(new ImageIcon(scaledImage));
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
-                posterLabel.setIcon(null); // Limpa o poster em caso de erro
+                posterLabel.setIcon(null);
             }
         } else {
-            posterLabel.setIcon(null); // Limpa o poster se a URL estiver vazia
+            posterLabel.setIcon(null);
         }
     }
-}
 
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new JanelaPrincipal();
+            }
+        });
+    }
+}

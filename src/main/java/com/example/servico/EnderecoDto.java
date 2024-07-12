@@ -109,5 +109,4 @@ public class EnderecoDto {
                 + "\nDuração = " + runtime + "\nGenêro = " + genre + "\nDiretor = " + director + "\nEscritor = " + writer
                 + "\nElenco = " + actors + "\nResumo = " + plot;
     }
-    
 }

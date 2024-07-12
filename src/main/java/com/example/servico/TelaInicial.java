@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -40,14 +41,17 @@ public class TelaInicial {
                  | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-        backgroundImage = new ImageIcon("C:\\Users\\2023101202010019\\IdeaProjects\\ProjetoFilmesPOO\\image\\telainicial.png").getImage();
+        backgroundImage = new ImageIcon("C:\\Users\\arthur\\Documents\\ProjetoFilmesPOO\\ProjetoFilmesPOO\\image\\telainicial.png").getImage();
         initialize();
     }
 
     private void initialize() {
         frame = new JFrame("Flick Review");
-        frame.setBounds(100, 100, 400, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Maximiza a janela ao iniciar
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         frame.getContentPane().setLayout(new BorderLayout());
 
         // Painel para os campos de login
@@ -60,14 +64,14 @@ public class TelaInicial {
         gbc.insets = new java.awt.Insets(5, 5, 5, 5);
 
         JLabel lblUsername = new JLabel("Nome de usuário:");
-        lblUsername.setFont(new Font("Melted Monster", Font.PLAIN, 16));
-        lblUsername.setForeground(Color.WHITE); // Define a cor da fonte para branco
-        txtUsername = new JTextField(15); // Limita o tamanho da caixa de texto
+        lblUsername.setFont(new Font("Melted Monster", Font.PLAIN, 30));
+        lblUsername.setForeground(Color.red); // Define a cor da fonte para branco
+        txtUsername = new JTextField(25); // Limita o tamanho da caixa de texto
 
         JLabel lblPassword = new JLabel("Senha:");
-        lblPassword.setFont(new Font("Melted Monster", Font.PLAIN, 16));
-        lblPassword.setForeground(Color.WHITE); // Define a cor da fonte para branco
-        txtPassword = new JPasswordField(15); // Limita o tamanho da caixa de texto
+        lblPassword.setFont(new Font("Melted Monster", Font.PLAIN, 30));
+        lblPassword.setForeground(Color.red); // Define a cor da fonte para branco
+        txtPassword = new JPasswordField(25); // Limita o tamanho da caixa de texto
 
         btnCadastrar = new JButton("Cadastrar");
         btnEntrar = new JButton("Entrar");
@@ -76,14 +80,14 @@ public class TelaInicial {
         btnEntrar.setIcon(new ImageIcon("path/to/login_icon.png"));
 
         btnCadastrar.setBackground(new Color(0, 0, 0));
-        btnCadastrar.setForeground(Color.WHITE);
-        btnCadastrar.setFont(new Font("Arial", Font.BOLD, 12));
+        btnCadastrar.setForeground(new Color(255,63,63));
+        btnCadastrar.setFont(new Font("Melted Monster", Font.BOLD, 30));
         btnCadastrar.setFocusPainted(false);
         btnCadastrar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         btnEntrar.setBackground(new Color(255, 63, 63));
-        btnEntrar.setForeground(Color.WHITE);
-        btnEntrar.setFont(new Font("Arial", Font.BOLD, 12));
+        btnEntrar.setForeground(new Color(0,0,0));
+        btnEntrar.setFont(new Font("Melted Monster", Font.BOLD, 30));
         btnEntrar.setFocusPainted(false);
         btnEntrar.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -141,11 +145,10 @@ public class TelaInicial {
 
         if (autenticar(username, new String(password))) {
             frame.dispose(); // Fecha a tela inicial
-            JanelaPrincipal mainApp = new JanelaPrincipal();
-            mainApp.show(); // Exibe a tela principal
+            new JanelaPrincipal(); // Inicia e exibe a tela principal
         } else {
             JOptionPane.showMessageDialog(frame, "Nome de usuário ou senha incorretos.", "Erro de Login", JOptionPane.ERROR_MESSAGE);
-        }
+        }        
     }
 
     private void abrirTelaCadastro() {
@@ -167,5 +170,14 @@ public class TelaInicial {
             super.paintComponent(g);
             g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
         }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new TelaInicial().show();
+            }
+        });
     }
 }
