@@ -1,9 +1,11 @@
 package com.example.servico;
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -13,6 +15,22 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 public class JanelaPrincipal {
     private JFrame frame;
@@ -32,19 +50,19 @@ public class JanelaPrincipal {
         // Configurações do tema dark
         try {
             UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-            UIManager.put("control", new Color(128, 128, 128));
-            UIManager.put("info", new Color(128, 128, 128));
-            UIManager.put("nimbusBase", new Color(18, 30, 49));
+            UIManager.put("control", new Color(64, 64, 64));
+            UIManager.put("info", new Color(64, 64, 64));
+            UIManager.put("nimbusBase", new Color(18, 18, 18));
             UIManager.put("nimbusAlertYellow", new Color(248, 187, 0));
             UIManager.put("nimbusDisabledText", new Color(128, 128, 128));
-            UIManager.put("nimbusFocus", new Color(115, 164, 209));
-            UIManager.put("nimbusGreen", new Color(176, 179, 50));
-            UIManager.put("nimbusInfoBlue", new Color(66, 139, 221));
-            UIManager.put("nimbusLightBackground", new Color(18, 30, 49));
+            UIManager.put("nimbusFocus", new Color(115, 115, 115));
+            UIManager.put("nimbusGreen", new Color(176, 176, 176));
+            UIManager.put("nimbusInfoBlue", new Color(64, 64, 64));
+            UIManager.put("nimbusLightBackground", new Color(18, 18, 18));
             UIManager.put("nimbusOrange", new Color(191, 98, 4));
             UIManager.put("nimbusRed", new Color(169, 46, 34));
             UIManager.put("nimbusSelectedText", new Color(255, 255, 255));
-            UIManager.put("nimbusSelectionBackground", new Color(104, 93, 156));
+            UIManager.put("nimbusSelectionBackground", new Color(64, 64, 64));
             UIManager.put("text", new Color(230, 230, 230));
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,23 +76,26 @@ public class JanelaPrincipal {
 
         // Painel para entrada de texto e botão de busca
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         JLabel lblNomeFilme = new JLabel("Nome do Filme:");
-        lblNomeFilme.setFont(new Font("Arial", Font.BOLD, 14));
+        lblNomeFilme.setFont(new Font("Melted Monster", Font.BOLD, 14));
         lblNomeFilme.setForeground(Color.WHITE); // Define a cor do texto para branco
         textField = new JTextField(30);
         textField.setBackground(new Color(30, 30, 30)); // Cor de fundo escura
         textField.setForeground(Color.WHITE); // Cor do texto para branco
 
         JButton btnBuscar = new JButton("Buscar");
+        btnBuscar.setFont(new Font("Melted Monster", Font.BOLD, 20));
+        btnBuscar.setBackground(new Color(255, 63, 63)); // Cor RGB: 255, 63, 63
+        btnBuscar.setForeground(Color.BLACK);
+        btnBuscar.setFocusPainted(false);
+
         btnBuscar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 buscarFilmes();
             }
         });
-        btnBuscar.setBackground(new Color(50, 50, 50)); // Cor de fundo escura
-        btnBuscar.setForeground(Color.WHITE); // Cor do texto para branco
 
         inputPanel.setBackground(new Color(30, 30, 30)); // Cor de fundo escura
         inputPanel.add(lblNomeFilme);
@@ -85,7 +106,7 @@ public class JanelaPrincipal {
 
         // Painel principal para a lista de filmes e detalhes
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBackground(new Color(18, 30, 49)); // Cor de fundo escura
+        mainPanel.setBackground(new Color(18, 18, 18)); // Cor de fundo escura
         frame.getContentPane().add(mainPanel, BorderLayout.CENTER);
 
         // Lista de resultados de filmes
@@ -94,7 +115,7 @@ public class JanelaPrincipal {
         movieList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         movieList.setForeground(Color.WHITE); // Cor do texto para branco
         movieList.setBackground(new Color(30, 30, 30)); // Cor de fundo escura
-        movieList.setSelectionBackground(new Color(104, 93, 156)); // Cor de fundo da seleção
+        movieList.setSelectionBackground(new Color(64, 64, 64)); // Cor de fundo da seleção
         movieList.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
@@ -114,7 +135,7 @@ public class JanelaPrincipal {
 
         // Painel de detalhes do filme
         JPanel detailsPanel = new JPanel(new BorderLayout());
-        detailsPanel.setBackground(new Color(18, 30, 49)); // Cor de fundo escura
+        detailsPanel.setBackground(new Color(18, 18, 18)); // Cor de fundo escura
         mainPanel.add(detailsPanel, BorderLayout.CENTER);
 
         // Painel para o poster do filme
@@ -122,7 +143,7 @@ public class JanelaPrincipal {
         posterLabel.setHorizontalAlignment(JLabel.CENTER);
         posterLabel.setVerticalAlignment(JLabel.TOP);
         posterLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        posterLabel.setBackground(new Color(18, 30, 49)); // Cor de fundo escura
+        posterLabel.setBackground(new Color(18, 18, 18)); // Cor de fundo escura
         detailsPanel.add(posterLabel, BorderLayout.WEST);
 
         // Área de texto para exibir informações do filme
@@ -130,7 +151,7 @@ public class JanelaPrincipal {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setEditable(false);
-        textArea.setBackground(new Color(18, 30, 49)); // Cor de fundo escura
+        textArea.setBackground(new Color(18, 18, 18)); // Cor de fundo escura
         textArea.setForeground(Color.WHITE); // Cor do texto para branco
         JScrollPane textScrollPane = new JScrollPane(textArea);
         detailsPanel.add(textScrollPane, BorderLayout.CENTER);
@@ -195,12 +216,7 @@ public class JanelaPrincipal {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new JanelaPrincipal();
-            }
-        });
+    public void show() {
+        frame.setVisible(true);
     }
 }

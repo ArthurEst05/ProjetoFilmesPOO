@@ -1,7 +1,7 @@
 package com.example.servico;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EnderecoDto {
@@ -105,8 +105,8 @@ public class EnderecoDto {
 
     @Override
     public String toString() {
-        return "Titulo = " + title + "\nAno de lançamento = " + year + "\nIdade Recomendada = " + rated + "\nData de lançamento = " + released
-                + "\nDuração = " + runtime + "\nGenêro = " + genre + "\nDiretor = " + director + "\nEscritor = " + writer
-                + "\nElenco = " + actors + "\nResumo = " + plot;
+        return "Title = " + title + "\nRelease year = " + year + "\nRecommended Age = " + rated + "\nRelease date = " + released
+                + "\nRuntime = " + runtime + "\nGenre = " + genre + "\nDirector = " + director + "\nWriter = " + writer
+                + "\nActors = " + actors + "\nPlot = " + plot;
     }
 }

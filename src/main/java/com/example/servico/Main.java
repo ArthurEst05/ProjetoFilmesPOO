@@ -1,6 +1,6 @@
 package com.example.servico;
 
-import java.awt.*;
+import java.awt.EventQueue;
 
 public class Main {
 
